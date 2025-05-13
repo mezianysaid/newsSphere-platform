@@ -1,0 +1,29 @@
+// Abstracts
+@import "abstracts/variables";
+@import "abstracts/mixins";
+
+// Base
+@import "base/reset";
+
+// Components
+@import "components/button";
+@import "components/input";
+@import "components/product-card";
+@import "components/cart";
+
+// Layouts
+@import "layouts/header";
+@import "layouts/footer";
+@import "layouts/grid";
+
+// Global styles
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+.main-content {
+  min-height: calc(100vh - 200px); // Adjust based on your header/footer height
+  padding: $spacing-lg 0;
+}

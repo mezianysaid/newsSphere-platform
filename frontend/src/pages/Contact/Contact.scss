@@ -1,0 +1,306 @@
+@import "../../styles/abstracts/variables";
+@import "../../styles/abstracts/mixins";
+
+.contact-page {
+  min-height: 100vh;
+  background-color: $background-color;
+  overflow-x: hidden;
+  margin-top: -30px;
+  // Hero Section
+  .hero-section {
+    position: relative;
+    padding: $spacing-xl * 2 0;
+    background: linear-gradient(135deg, $primary-color 0%, $accent-color 10%);
+    overflow: hidden;
+    min-height: 30vh;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("../../assets/images/shop1.jpg");
+      opacity: 0.5;
+      animation: backgroundMove 20s linear infinite;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: white;
+      animation: fadeInUp 1s ease-out;
+
+      .hero-title {
+        font-size: 4rem;
+        font-weight: 800;
+        margin-bottom: $spacing-md;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        animation: slideInLeft 1s ease-out;
+
+        @include respond-to(sm) {
+          font-size: 2.5rem;
+        }
+      }
+
+      .hero-subtitle {
+        font-size: 1.75rem;
+        opacity: 0.9;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        animation: slideInRight 1s ease-out;
+
+        @include respond-to(sm) {
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+
+  // Contact Info Section
+  .contact-info-section {
+    padding: $spacing-xl * 2 0;
+    background-color: white;
+
+    .contact-info-card {
+      height: 100%;
+      background-color: white;
+      border-radius: $border-radius-lg;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.5s ease-out;
+      animation-fill-mode: both;
+      margin-inline: 10px;
+
+      @for $i from 1 through 4 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 0.1}s;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-10px);
+        box-shadow: $shadow-lg;
+        background: linear-gradient(
+          135deg,
+          rgba($primary-color, 0.5) 0%,
+          rgba($accent-color, 0.6) 100%
+        );
+      }
+
+      .contact-info-icon {
+        width: 60px;
+        height: 60px;
+        background-color: rgba($primary-color, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: $spacing-md;
+        transition: all 0.3s ease;
+
+        svg {
+          font-size: 2rem;
+          color: $primary-color;
+          transition: all 0.3s ease;
+        }
+      }
+
+      .contact-info-title {
+        color: $text-color;
+        margin-bottom: $spacing-sm;
+        font-weight: 600;
+      }
+
+      .contact-info-content {
+        color: $text-light;
+        line-height: 1.6;
+        color: $primary-color;
+      }
+
+      .contact-info-link {
+        text-decoration: none;
+        color: inherit;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+
+  // Contact Form Section
+  .contact-form-section {
+    padding: $spacing-xl * 2 0;
+    background-color: $gray-100;
+
+    .contact-form-content {
+      animation: fadeInLeft 1s ease-out;
+
+      .section-title {
+        color: $text-color;
+        margin-bottom: $spacing-lg;
+        font-weight: 700;
+      }
+
+      .section-text {
+        color: $text-light;
+        margin-bottom: $spacing-xl;
+        line-height: 1.8;
+      }
+
+      .contact-form {
+        .form-field {
+          margin-bottom: $spacing-md;
+          background-color: white;
+          border-radius: $border-radius-md;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+          }
+
+          .MuiOutlinedInput-root {
+            &:hover .MuiOutlinedInput-notchedOutline {
+              border-color: $primary-color;
+            }
+          }
+        }
+
+        .submit-button {
+          width: 100%;
+          padding: $spacing-md;
+          font-size: 1.1rem;
+          text-transform: none;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: $shadow-lg;
+          }
+        }
+      }
+    }
+
+    .map-container {
+      height: 500px;
+      border-radius: $border-radius-lg;
+      overflow: hidden;
+      box-shadow: $shadow-lg;
+      animation: fadeInRight 1s ease-out;
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+    }
+  }
+
+  // Social Links Section
+  .social-links-section {
+    padding: $spacing-xl * 2 0;
+    background-color: white;
+
+    .section-title {
+      text-align: center;
+      margin-bottom: $spacing-xl * 2;
+      color: $text-color;
+      font-weight: 700;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: $spacing-md;
+      animation: fadeInUp 1s ease-out;
+
+      .social-link {
+        width: 60px;
+        height: 60px;
+        background-color: $gray-100;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: $primary-color;
+          color: white;
+          transform: translateY(-5px);
+        }
+
+        svg {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes backgroundMove {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}

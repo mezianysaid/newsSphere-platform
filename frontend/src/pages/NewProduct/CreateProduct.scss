@@ -1,0 +1,60 @@
+.create-product {
+  padding: 2rem 0;
+
+  .form-container {
+    padding: 2rem;
+
+    .form-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 1rem;
+
+      .back-button {
+        color: #666;
+      }
+    }
+
+    .section-title {
+      color: #333;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .alert {
+      margin-bottom: 2rem;
+    }
+
+    .spec-row {
+      margin-bottom: 1rem;
+
+      button {
+        height: 100%;
+        min-height: 56px;
+      }
+    }
+
+    .upload-button {
+      margin-bottom: 1rem;
+    }
+
+    .image-preview {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+
+      img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+    }
+
+    .submit-button {
+      min-width: 200px;
+    }
+  }
+}

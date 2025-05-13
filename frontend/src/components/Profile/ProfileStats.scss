@@ -1,0 +1,47 @@
+.profile-stats {
+  margin-bottom: 2rem;
+
+  .stats-title {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .stat-card {
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+
+      svg {
+        font-size: 24px;
+      }
+    }
+
+    .stat-content {
+      flex: 1;
+
+      .stat-value {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-title {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}

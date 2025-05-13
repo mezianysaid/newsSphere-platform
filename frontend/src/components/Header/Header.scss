@@ -1,0 +1,333 @@
+@import "../../styles/abstracts/variables";
+@import "../../styles/abstracts/mixins";
+
+.app-bar {
+  // background: linear-gradient(135deg, #f59e0b 0%, #f59e0b 100%);
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1),
+    0 2px 4px -1px rgba(99, 102, 241, 0.06);
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1),
+      0 4px 6px -2px rgba(99, 102, 241, 0.05);
+  }
+
+  .MuiToolbar-root {
+    @include flex(row, space-between, center);
+    padding: $spacing-sm $spacing-md;
+    min-height: 70px;
+  }
+
+  .logo {
+    display: none;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-right: $spacing-lg;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.5rem;
+
+    &:hover {
+      transform: scale(1.05);
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .desktop-nav {
+    @include flex(row, center, center);
+    gap: $spacing-md;
+    margin-left: auto;
+    // margin-right: $spacing-lg;
+
+    .MuiButton-root {
+      position: relative;
+      font-weight: 600;
+      text-transform: none;
+      padding: $spacing-sm $spacing-md;
+      color: rgba(255, 255, 255, 0.9);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+
+      &:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: white;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+        border-radius: 2px;
+      }
+
+      &:hover::after {
+        width: 80%;
+      }
+    }
+  }
+
+  .right-icons {
+    @include flex(row, center, center);
+    gap: $spacing-sm;
+
+    .MuiIconButton-root {
+      transition: all 0.3s ease;
+      color: rgba(255, 255, 255, 0.9);
+      padding: 8px;
+      border-radius: 8px;
+
+      &:hover {
+        transform: scale(1.1);
+        color: white;
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+    }
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+}
+
+// Mobile Drawer Styles
+.mobile-drawer {
+  .MuiDrawer-paper {
+    width: 200px;
+    background-color: white;
+    border: none;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .drawer-header {
+    padding: $spacing-lg;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+    color: white;
+
+    .drawer-title {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: white;
+    }
+
+    .close-button {
+      color: white;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: rotate(90deg);
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .MuiList-root {
+    padding: $spacing-md 0;
+  }
+
+  .MuiListItem-root {
+    padding: $spacing-sm $spacing-lg;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+    color: $text-color;
+    border-radius: 0 8px 8px 0;
+    margin-right: $spacing-md;
+
+    &:hover {
+      background-color: rgba(99, 102, 241, 0.05);
+    }
+
+    &.active {
+      background-color: rgba(99, 102, 241, 0.1);
+      color: $primary-color;
+
+      .MuiListItemIcon-root {
+        color: $primary-color;
+      }
+    }
+
+    .MuiListItemIcon-root {
+      color: $text-light;
+      min-width: 40px;
+      transition: all 0.3s ease;
+      margin-right: $spacing-sm;
+    }
+
+    .MuiListItemText-primary {
+      font-weight: 500;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    &:hover {
+      .MuiListItemIcon-root {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .MuiDivider-root {
+    margin: $spacing-md 0;
+    background-color: $gray-200;
+  }
+
+  .drawer-footer {
+    padding: $spacing-lg;
+    border-top: 1px solid $gray-200;
+    margin-top: auto;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+      margin-bottom: $spacing-md;
+
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: $gray-100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $primary-color;
+        font-weight: 600;
+      }
+
+      .user-details {
+        .user-name {
+          color: $text-color;
+          font-weight: 600;
+          font-size: 1rem;
+        }
+
+        .user-email {
+          color: $text-light;
+          font-size: 0.875rem;
+        }
+      }
+    }
+
+    .logout-button {
+      width: 100%;
+      color: $text-color;
+      background-color: $gray-100;
+      padding: $spacing-sm;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $gray-200;
+        color: $error-color;
+      }
+    }
+  }
+}
+
+// Profile Menu Styles
+.profile-menu {
+  .MuiPaper-root {
+    min-width: 220px;
+    margin-top: $spacing-sm;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .MuiMenuItem-root {
+    padding: $spacing-sm $spacing-md;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: #6366f1;
+    border-radius: 8px;
+    margin: 4px 8px;
+
+    &:hover {
+      background-color: rgba(99, 102, 241, 0.1);
+      color: #06f8a7;
+    }
+  }
+}
+
+// Search Bar Styles
+.MuiInputBase-root {
+  color: white;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  &::before,
+  &::after {
+    border-color: transparent;
+  }
+
+  &.Mui-focused {
+    background-color: rgba(255, 255, 255, 0.2);
+
+    &::after {
+      border-color: #10b981;
+    }
+  }
+
+  input {
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+// Badge Styles
+.MuiBadge-badge {
+  background-color: #08f8a8;
+  color: white;
+  font-weight: 600;
+  padding: 0 4px;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  border: 2px solid #6366f1;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+// Responsive Styles
+@include respond-to(sm) {
+  .app-bar {
+    .MuiToolbar-root {
+      padding: $spacing-sm $spacing-lg;
+    }
+  }
+}
+
+@include respond-to(md) {
+  .app-bar {
+    .mobile-menu-button {
+      display: none;
+    }
+
+    .desktop-nav {
+      display: flex;
+    }
+
+    .logo {
+      display: block;
+    }
+  }
+}

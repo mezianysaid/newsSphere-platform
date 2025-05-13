@@ -1,0 +1,165 @@
+@import "../../styles/variables";
+
+.signin {
+  &-root {
+    min-height: 100vh;
+    background: linear-gradient(
+      135deg,
+      rgba($primary-color, 0.05) 0%,
+      rgba($secondary-color, 0.05) 100%
+    );
+    padding: $spacing-xl 0;
+    margin-top: -20px;
+  }
+
+  &-container {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  &-paper {
+    padding: $spacing-xl;
+    border-radius: $border-radius-lg;
+    background: rgba($white, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: $shadow-sm;
+    transition: $transition-normal;
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+    }
+  }
+
+  &-title {
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: $spacing-sm;
+    text-align: center;
+  }
+
+  &-subtitle {
+    color: $text-secondary;
+    margin-bottom: $spacing-xl;
+    text-align: center;
+  }
+
+  &-form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &-textfield {
+    .MuiOutlinedInput-root {
+      border-radius: $border-radius-lg;
+      transition: $transition-normal;
+
+      &:hover {
+        .MuiOutlinedInput-notchedOutline {
+          border-color: $primary-color;
+        }
+      }
+    }
+  }
+
+  &-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: $spacing-sm 0;
+  }
+
+  &-forgot-password {
+    color: $primary-color;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: $transition-normal;
+
+    &:hover {
+      color: darken($primary-color, 10%);
+      text-decoration: underline;
+    }
+  }
+
+  &-submit {
+    border-radius: $border-radius-lg;
+    text-transform: none;
+    padding: $spacing-sm;
+    margin: $spacing-md 0;
+    transition: $transition-normal;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: $shadow-sm;
+    }
+
+    &:disabled {
+      background-color: rgba($primary-color, 0.5);
+    }
+  }
+
+  &-divider {
+    margin: $spacing-md 0;
+
+    .MuiDivider-root {
+      &::before,
+      &::after {
+        border-color: rgba($text-secondary, 0.2);
+      }
+    }
+  }
+
+  &-social {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &-social-button {
+    border-radius: $border-radius-lg;
+    text-transform: none;
+    padding: $spacing-sm;
+    transition: $transition-normal;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &-social-icon {
+    margin-right: $spacing-sm;
+  }
+
+  &-register {
+    text-align: center;
+    margin-top: $spacing-lg;
+  }
+
+  &-register-link {
+    color: $primary-color;
+    text-decoration: none;
+    font-weight: 600;
+    transition: $transition-normal;
+
+    &:hover {
+      color: darken($primary-color, 10%);
+      text-decoration: underline;
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: $tablet) {
+  .signin {
+    &-paper {
+      padding: $spacing-lg;
+    }
+
+    &-social {
+      flex-direction: column;
+    }
+  }
+}

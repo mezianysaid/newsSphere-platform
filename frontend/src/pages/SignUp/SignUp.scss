@@ -1,0 +1,89 @@
+@import "../../styles/variables";
+
+.signup {
+  &-root {
+    min-height: 100vh;
+    background: linear-gradient(
+      135deg,
+      rgba($primary-color, 0.1) 0%,
+      rgba($secondary-color, 0.1) 100%
+    );
+    margin-top: -20px;
+
+  }
+
+  &-paper {
+    padding: 2rem;
+    width: 100%;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  }
+
+  &-title {
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: 1.5rem;
+  }
+
+  &-subtitle {
+    color: $text-secondary;
+    margin-bottom: 2rem;
+  }
+
+  &-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &-textfield {
+    margin-bottom: 1rem;
+
+    .MuiOutlinedInput-root {
+      border-radius: 1rem;
+    }
+  }
+
+  &-submit-button {
+    padding: 0.75rem 0;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    text-transform: none;
+    font-size: 1rem;
+    background: linear-gradient(
+      45deg,
+      $primary-color 30%,
+      $secondary-color 90%
+    );
+
+    &:hover {
+      background: linear-gradient(
+        45deg,
+        darken($primary-color, 10%) 30%,
+        darken($secondary-color, 10%) 90%
+      );
+    }
+  }
+
+  &-social-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &-social-button {
+    border-radius: 1rem;
+    text-transform: none;
+  }
+
+  &-link {
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
