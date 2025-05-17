@@ -146,10 +146,8 @@ const AdminProducts = () => {
               <TableRow key={product._id}>
                 <TableCell>
                   <img
-                    src={
-                      product.images?.[0] || "../../../assets/images/shop1.jpg"
-                    }
-                    alt={product.name}
+                    src={process.env.REACT_APP_API_URL + product.images?.[0]}
+                    alt="../../../assets/images/shop1.jpg"
                     style={{ width: 50, height: 50, objectFit: "cover" }}
                   />
                 </TableCell>

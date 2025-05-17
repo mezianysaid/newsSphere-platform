@@ -106,8 +106,8 @@ const Favorite = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={product.image}
-                    alt={product.name}
+                    image={process.env.REACT_APP_API_URL + product.image}
+                    alt="../../assets/images/arriv1.jpg"
                     className="product-image"
                   />
                   <CardContent>

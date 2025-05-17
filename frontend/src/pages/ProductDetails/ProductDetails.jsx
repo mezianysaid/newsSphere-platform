@@ -117,8 +117,12 @@ const ProductDetails = () => {
             <Box className="product-gallery">
               <Box className="main-image-container">
                 <img
-                  src={product.images?.[selectedImage] || "/placeholder.png"}
-                  alt={product.name}
+                  src={
+                    process.env.REACT_APP_API_URL +
+                      product.images?.[selectedImage] ||
+                    "../../assets/images/arriv1.jpg"
+                  }
+                  alt="../../assets/images/arriv1.jpg"
                   className="main-image"
                 />
               </Box>
