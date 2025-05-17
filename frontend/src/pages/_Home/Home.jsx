@@ -340,8 +340,11 @@ const Home = () => {
                 >
                   <Box className="product-image">
                     <img
-                      src={process.env.REACT_APP_API_URL + product.images?.[0]}
-                      alt="../../assets/images/home1.jpg"
+                      src={
+                        process.env.REACT_APP_API_URL + product.images?.[0] ||
+                        "../../assets/images/home1.jpg"
+                      }
+                      alt={product.name}
                     />
                   </Box>
                   <CardContent>

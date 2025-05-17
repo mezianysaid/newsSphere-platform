@@ -122,7 +122,7 @@ const ProductDetails = () => {
                       product.images?.[selectedImage] ||
                     "../../assets/images/arriv1.jpg"
                   }
-                  alt="../../assets/images/arriv1.jpg"
+                  alt={product.name}
                   className="main-image"
                 />
               </Box>
