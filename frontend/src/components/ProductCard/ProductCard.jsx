@@ -43,8 +43,8 @@ const ProductCard = ({ product }) => {
       <Link to={`/product/${product._id}`} className="product-link">
         <Box className="product-image">
           <img
-            src={process.env.REACT_APP_API_URL+product.images?.[0]}
-            alt="../../assets/images/home1.jpg"
+            src={`${process.env.REACT_APP_API_URL}${product.images?.[0]}`}
+            alt={product.name}
           />
         </Box>
       </Link>
