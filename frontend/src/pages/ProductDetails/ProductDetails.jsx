@@ -135,7 +135,11 @@ const ProductDetails = () => {
                     }`}
                     onClick={() => setSelectedImage(index)}
                   >
-                    <img src={image} alt={`${product.name} - ${index + 1}`} />
+                    <img
+                      src={`${process.env.REACT_APP_API_URL}${image}`}
+                      crossOrigin="anonymous"
+                      alt={`${product.name} - ${index + 1}`}
+                    />
                   </Box>
                 ))}
               </Box>

@@ -61,6 +61,7 @@ const Favorite = () => {
   const handleCloseSnackbar = () => {
     setShowSnackbar(false);
   };
+  console.log("fav", favoriteProducts);
 
   return (
     <Box className="favorite-page">
