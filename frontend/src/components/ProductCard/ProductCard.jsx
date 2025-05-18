@@ -47,6 +47,7 @@ const ProductCard = ({ product }) => {
         <Box className="product-image">
           <img
             src={`${process.env.REACT_APP_API_URL}${product.images?.[0]}`}
+            crossOrigin="anonymous"
             alt={product.name}
           />
         </Box>
