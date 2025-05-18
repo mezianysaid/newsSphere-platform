@@ -38,7 +38,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files from uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"), {
+    setHeaders: (res) => {
+      res.set("Cross-Origin-Resource-Policy", "cross-origin");
+      res.set("Access-Control-Allow-Origin", "*");
+    },
+  })
+);
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/admin", protect, adminRoutes);
