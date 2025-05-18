@@ -107,7 +107,7 @@ const Favorite = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={`${process.env.REACT_APP_API_URL}${product.image}`}
+                    image={process.env.REACT_APP_API_URL + product.image}
                     crossOrigin="anonymous"
                     alt={product.name}
                     className="product-image"
