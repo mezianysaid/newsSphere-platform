@@ -37,7 +37,10 @@ const ProductCard = ({ product }) => {
   };
 
   if (!product) return null;
-
+  console.log(
+    "Image URL:",
+    `${process.env.REACT_APP_API_URL}${product.images?.[0]}`
+  );
   return (
     <Card className="product-card">
       <Link to={`/product/${product._id}`} className="product-link">
