@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
@@ -136,11 +136,25 @@ const Home = () => {
   // const favoriteItems = useSelector((state) => state.favorites.items);
 
   // Get featured products (first 4 products or fewer if less than 4)
-  const featuredProducts = products?.slice(0, 4) || [];
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // First, create a utility function to shuffle arrays (can be in a separate file)
+  const shuffleArray = (array) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+  // Inside your component
+  const shuffledProducts = useMemo(() => {
+    return shuffleArray(products);
+  }, [products]); // Only reshuffles when featuredProducts changes
+
+  const featuredProducts = shuffledProducts?.slice(0, 4) || [];
   useEffect(() => {
     // Fetch products if not already loaded
     if (!products || products.length === 0) {

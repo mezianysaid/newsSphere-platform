@@ -21,7 +21,7 @@ const sendContactEmail = async (formData) => {
   // Email to the company
   const mailOptions = {
     from: process.env.SMTP_USER || "your-email@gmail.com",
-    to: process.env.COMPANY_EMAIL || "shopswift024@gmail.com",
+    to: process.env.COMPANY_EMAIL || "zonshopstor@gmail.com",
     subject: `Contact Form: ${subject}`,
     html: `
       <h2>New Contact Form Submission</h2>

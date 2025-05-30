@@ -67,7 +67,7 @@
 
   .products-grid {
     margin-top: $spacing-lg;
-    padding-inline: 2rem;
+    padding-inline: 0.25rem;
   }
 
   .product-card {
@@ -126,7 +126,7 @@
     }
 
     .MuiCardContent-root {
-      padding: $spacing-md;
+      padding: 2rem 0.25rem;
 
       .product-name {
         font-weight: 600;

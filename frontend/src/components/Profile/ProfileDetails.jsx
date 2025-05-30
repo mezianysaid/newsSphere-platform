@@ -6,7 +6,6 @@ import {
   Grid,
   Box,
   Divider,
-  
 } from "@mui/material";
 
 // Helper function to format dates
@@ -48,6 +47,7 @@ const ProfileDetails = ({ user }) => {
             <DetailItem label="Email" value={user.email} />
             <DetailItem label="Phone" value={user.phone || "Not provided"} />
             <DetailItem label="Date of Birth" value={formatDate(user.dob)} />
+            <DetailItem label="Role" value={user.role || "User"} />
           </Grid>
           <Grid item xs={12} md={6}>
             <DetailItem

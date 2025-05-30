@@ -64,7 +64,7 @@ const Profile = () => {
     ? {
         ...user,
         // Provide fallback values for missing properties
-        avatar: user.avatar || userLogo,
+        avatar: userLogo,
         name: user.name || "User",
         email: user.email || "No email provided",
         phone: user.phone || "No phone provided",

@@ -291,8 +291,8 @@ const Header = () => {
             >
               {isAuthenticated && user?.avatar ? (
                 <Avatar
-                  src={user.avatar ? user.avatar : usrlogo}
-                  alt={usrlogo}
+                  src={usrlogo}
+                  alt="Z"
                   sx={{
                     width: 34,
                     height: 34,

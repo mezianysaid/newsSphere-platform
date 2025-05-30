@@ -108,6 +108,9 @@ const AdminProducts = () => {
           <Typography variant="h4" component="h1">
             Manage Products
           </Typography>
+          <Typography variant="subtitle1" color="text.secondary">
+            Total Products: {products.length}
+          </Typography>
         </Grid>
         <Grid item>
           <Button

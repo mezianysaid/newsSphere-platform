@@ -114,7 +114,7 @@ const ProfileHeader = ({ user }) => {
       <Box className="profile-header" sx={{ textAlign: "center", mb: 4 }}>
         <Box sx={{ position: "relative", display: "inline-block" }}>
           <Avatar
-            src={!imageError ? user.avatar || userlogo : null}
+            src={userlogo }
             alt={user.name}
             onError={handleImageError}
             sx={{
