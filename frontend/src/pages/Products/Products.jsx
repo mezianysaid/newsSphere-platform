@@ -46,9 +46,16 @@ const Products = () => {
     { value: "rating", label: "Highest Rated" },
     { value: "newest", label: "Newest First" },
   ];
-
+  const shuffleArray = (array) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
   const filteredProducts = useMemo(() => {
-    return products
+    let filtered = products
       .filter((product) => {
         const matchesSearch = product.name
           .toLowerCase()
@@ -72,6 +79,13 @@ const Products = () => {
             return 0;
         }
       });
+
+    // Shuffle the array if sortBy is 'featured'
+    if (sortBy === "featured") {
+      return shuffleArray(filtered);
+    }
+
+    return filtered;
   }, [products, searchQuery, selectedCategory, sortBy]);
 
   // Calculate pagination
