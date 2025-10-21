@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "../../utils/imageUtils";
 import {
   Container,
   Grid,
@@ -17,19 +18,17 @@ import {
   useTheme,
   useMediaQuery,
   Chip,
+  MenuItem,
 } from "@mui/material";
 import {
   Search,
   FilterList,
-  Star,
   NewReleases,
-  PriceChange,
+  Visibility,
   ArrowBack,
+  Category as CategoryIcon,
 } from "@mui/icons-material";
-import { categories } from "../../data/categories";
-import CategoryCard from "../../components/CategoryCard/CategoryCard";
-import ProductCard from "../../components/ProductCard/ProductCard";
-import { getProducts } from "../../store/actions/productActions";
+import { fetchArticles } from "../../store/actions/articleActions";
 import { useDispatch, useSelector } from "react-redux";
 import "./Categories.scss";
 
@@ -38,47 +37,67 @@ const Categories = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
+  const { articles, loading } = useSelector((state) => state.articles);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [sortBy, setSortBy] = useState("featured");
+  const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(fetchArticles());
   }, [dispatch]);
 
-  const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const newsCategories = [
+    { id: 1, name: "Technology" },
+    { id: 2, name: "Politics" },
+    { id: 3, name: "Business" },
+    { id: 4, name: "Sports" },
+    { id: 5, name: "World" },
+    { id: 6, name: "Science" },
+    { id: 7, name: "Health" },
+    { id: 8, name: "Entertainment" },
+  ];
+
+  const filteredCategories = useMemo(
+    () =>
+      newsCategories.filter((category) =>
+        category.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery]
   );
 
-  const filteredProducts = selectedCategory
-    ? products.filter(
-        (product) =>
-          product.category.toLowerCase() ===
-          categories.find((c) => c.id === selectedCategory)?.name.toLowerCase()
-      )
-    : [];
+  const selectedCategoryName = useMemo(
+    () => newsCategories.find((c) => c.id === selectedCategory)?.name,
+    [selectedCategory]
+  );
 
-  const sortProducts = (products, sortBy) => {
-    const sortedProducts = [...products];
+  const filteredArticles = useMemo(() => {
+    if (!selectedCategoryName) return [];
+    return (articles || []).filter(
+      (a) =>
+        (a.category || "").toLowerCase() === selectedCategoryName.toLowerCase()
+    );
+  }, [articles, selectedCategoryName]);
 
-    switch (sortBy) {
+  const sortArticles = (items, key) => {
+    const sorted = [...items];
+    switch (key) {
       case "newest":
-        return sortedProducts.sort((a, b) => b.id - a.id);
-      case "price-low":
-        return sortedProducts.sort((a, b) => a.price - b.price);
-      case "price-high":
-        return sortedProducts.sort((a, b) => b.price - a.price);
-      case "rating":
-        return sortedProducts.sort((a, b) => b.rating - a.rating);
+        return sorted.sort(
+          (a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0)
+        );
+      case "most-viewed":
+        return sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
       default:
-        return sortedProducts;
+        return sorted;
     }
   };
 
-  const sortedProducts = sortProducts(filteredProducts, sortBy);
+  const sortedArticles = useMemo(
+    () => sortArticles(filteredArticles, sortBy),
+    [filteredArticles, sortBy]
+  );
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory(categoryId);
@@ -102,11 +121,8 @@ const Categories = () => {
   };
 
   const sortOptions = [
-    // { value: "featured", label: "Featured", icon: <TrendingUp /> },
     { value: "newest", label: "Newest", icon: <NewReleases /> },
-    { value: "price-low", label: "Price: Low to High", icon: <PriceChange /> },
-    { value: "price-high", label: "Price: High to Low", icon: <PriceChange /> },
-    { value: "rating", label: "Highest Rated", icon: <Star /> },
+    { value: "most-viewed", label: "Most Viewed", icon: <Visibility /> },
   ];
 
   const FilterDrawer = () => (
@@ -154,7 +170,7 @@ const Categories = () => {
           Categories
         </Typography>
         <List>
-          {categories.map((category) => (
+          {newsCategories.map((category) => (
             <ListItem
               key={category.id}
               button
@@ -180,47 +196,32 @@ const Categories = () => {
   return (
     <Box className="categories-page">
       {/* Hero Section */}
-      <Box
-        className="hero-section"
-        sx={{
-          padding: { xs: "0.5rem 0", sm: "0.75rem 0" },
-          minHeight: "auto",
-          backgroundColor: "#f8f9fa",
-        }}
-      >
+      <Box className="hero-section">
         <Container maxWidth="lg">
           <Box
             className="hero-content"
             sx={{
-              padding: 0,
+              padding: { xs: 2, sm: 4 },
               display: "flex",
               flexDirection: "column",
-              gap: "0.5rem",
+              gap: { xs: 1, sm: 2 },
             }}
           >
             <Box
               className="page-header"
               sx={{
-                marginBottom: 0,
+                marginBottom: { xs: 1, sm: 2 },
                 display: "flex",
                 flexDirection: "column",
-                gap: "0.25rem",
+                gap: { xs: 0.5, sm: 1 },
               }}
             >
-              {selectedCategory && (
-                <Button
-                  startIcon={<ArrowBack />}
-                  onClick={handleBackToCategories}
-                  sx={{
-                    color: "black",
-                    padding: "2px 4px",
-                    minWidth: "auto",
-                    fontSize: "0.875rem",
-                  }}
-                >
-                  Back to Categories
-                </Button>
-              )}
+              <Typography
+                variant="overline"
+                sx={{ color: "rgba(255,255,255,0.8)" }}
+              >
+                Latest coverage
+              </Typography>
               <Typography
                 variant="h4"
                 className="page-title"
@@ -230,7 +231,18 @@ const Categories = () => {
                   fontWeight: 600,
                 }}
               >
-                {selectedCategory ? "Category Products" : "Shop by Category"}
+                Browse {""}
+                <span
+                  style={{
+                    background: "linear-gradient(135deg, #ff6b6b, #ee5a24)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  News
+                </span>{" "}
+                and Updates
               </Typography>
               <Typography
                 variant="body1"
@@ -238,117 +250,149 @@ const Categories = () => {
                 sx={{
                   fontSize: { xs: "0.75rem", sm: "0.875rem" },
                   marginBottom: "0.25rem",
-                  color: "text.secondary",
+                  color: "rgba(255,255,255,0.85)",
                 }}
               >
-                {selectedCategory
-                  ? `Browse products in ${
-                      categories.find((c) => c.id === selectedCategory)?.name
-                    }`
-                  : "Discover our curated collection of products"}
+                Search, filter and sort the latest articles.
               </Typography>
             </Box>
 
-            <Box
-              className="filters-section"
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
-                gap: { xs: "0.25rem", sm: "0.5rem" },
-                alignItems: { xs: "stretch", sm: "center" },
-              }}
-            >
+            <Box className="filters-section" sx={{ display: "grid", gap: 2 }}>
               <TextField
                 fullWidth
                 variant="outlined"
                 placeholder={
                   selectedCategory
-                    ? "Search products..."
+                    ? "Search articles..."
                     : "Search categories..."
                 }
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 sx={{
-                  borderRadius: 20,
-                  color: "black",
                   "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    background: "rgba(255,255,255,0.08)",
+                    borderRadius: 2,
                     height: { xs: "36px", sm: "40px" },
+                    "& fieldset": { borderColor: "rgba(255,255,255,0.2)" },
+                    "&:hover fieldset": {
+                      borderColor: "rgba(255,255,255,0.4)",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "rgba(255,255,255,0.6)",
+                    },
                   },
                 }}
                 className="searchAction"
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start" sx={{ color: "black" }}>
-                      <Search
-                        sx={{
-                          color: "black",
-                          borderRadius: 20,
-                          fontSize: "1.25rem",
-                        }}
-                      />
+                    <InputAdornment position="start" sx={{ color: "white" }}>
+                      <Search sx={{ color: "white", fontSize: "1.25rem" }} />
                     </InputAdornment>
                   ),
                 }}
               />
 
-              <Box
-                className="filter-actions"
-                sx={{
-                  display: "flex",
-                  gap: "0.25rem",
-                  flexWrap: "wrap",
-                  justifyContent: { xs: "center", sm: "flex-start" },
-                  width: { xs: "100%", sm: "auto" },
-                }}
-              >
-                {isMobile ? (
-                  <Button
-                    variant="outlined"
-                    startIcon={<FilterList />}
-                    onClick={() => setDrawerOpen(true)}
-                    color="white"
-                    className="filtersButton"
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Category"
+                    value={selectedCategory || ""}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment
+                          position="start"
+                          sx={{ color: "white" }}
+                        >
+                          <CategoryIcon />
+                        </InputAdornment>
+                      ),
+                    }}
                     sx={{
-                      height: {
-                        xs: "36px",
-                        sm: "40px",
+                      "& .MuiOutlinedInput-root": {
                         color: "white",
-                        mr: 20,
+                        background: "rgba(255,255,255,0.08)",
+                        borderRadius: 2,
+                        "& fieldset": { borderColor: "rgba(255,255,255,0.2)" },
+                        "&:hover fieldset": {
+                          borderColor: "rgba(255,255,255,0.4)",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "rgba(255,255,255,0.6)",
+                        },
                       },
-                      fontSize: "0.875rem",
+                      "& .MuiInputLabel-root": {
+                        color: "rgba(255,255,255,0.85)",
+                      },
                     }}
                   >
-                    Filters
-                  </Button>
-                ) : (
-                  <Box
-                    className="sort-options"
-                    sx={{
-                      display: "flex",
-                      gap: "0.25rem",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {sortOptions.map((option) => (
-                      <Button
-                        key={option.value}
-                        className="sortFeild"
-                        variant={
-                          sortBy === option.value ? "outlined" : "outlined"
-                        }
-                        startIcon={option.icon}
-                        onClick={() => setSortBy(option.value)}
-                        sx={{
-                          height: { xs: "36px", sm: "40px" },
-                          padding: { xs: "2px 8px", sm: "4px 12px" },
-                          fontSize: "0.875rem",
-                        }}
-                      >
-                        {option.label}
-                      </Button>
+                    <MenuItem value="">All Categories</MenuItem>
+                    {newsCategories.map((c) => (
+                      <MenuItem key={c.id} value={c.id}>
+                        {c.name}
+                      </MenuItem>
                     ))}
-                  </Box>
-                )}
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Sort By"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment
+                          position="start"
+                          sx={{ color: "white" }}
+                        >
+                          <NewReleases />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        color: "white",
+                        background: "rgba(255,255,255,0.08)",
+                        borderRadius: 2,
+                        "& fieldset": { borderColor: "rgba(255,255,255,0.2)" },
+                        "&:hover fieldset": {
+                          borderColor: "rgba(255,255,255,0.4)",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "rgba(255,255,255,0.6)",
+                        },
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: "rgba(255,255,255,0.85)",
+                      },
+                    }}
+                  >
+                    {sortOptions.map((o) => (
+                      <MenuItem key={o.value} value={o.value}>
+                        {o.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+              </Grid>
+              <Box className="hero-actions">
+                <Button
+                  className="primary-btn"
+                  onClick={() => navigate("/news")}
+                >
+                  View latest
+                </Button>
+                <Button
+                  className="secondary-link"
+                  onClick={() => navigate("/trending")}
+                >
+                  Explore trends
+                </Button>
               </Box>
             </Box>
           </Box>
@@ -356,21 +400,119 @@ const Categories = () => {
       </Box>
 
       {selectedCategory ? (
-        <Grid container spacing={3} className="products-grid">
-          {sortedProducts.map((product) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-              <ProductCard product={product} />
+        <Grid
+          container
+          spacing={3}
+          className="articles-grid"
+          sx={{ margin: 2 }}
+        >
+          {loading ? (
+            <Grid item xs={12}>
+              <Typography variant="body1">Loading articles...</Typography>
             </Grid>
-          ))}
+          ) : sortedArticles.length > 0 ? (
+            sortedArticles.map((article) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={article._id}>
+                <Box
+                  className="news-card"
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/article/${article._id}`)}
+                >
+                  <Box
+                    className="news-image"
+                    sx={{ height: 180, overflow: "hidden", borderRadius: 2 }}
+                  >
+                    {article.coverImage ? (
+                      <img
+                        src={getImageUrl(article.coverImage)}
+                        alt={article.title}
+                        crossOrigin="anonymous"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      <Box
+                        sx={{
+                          height: "100%",
+                          width: "100%",
+                          background: "#f1f2f6",
+                        }}
+                      />
+                    )}
+                  </Box>
+                  <Box className="news-content" sx={{ p: 2 }}>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ color: "text.secondary", mb: 0.5 }}
+                    >
+                      {article.category}
+                    </Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                      {article.title}
+                    </Typography>
+                    {article.excerpt && (
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary", mb: 1 }}
+                      >
+                        {article.excerpt}
+                      </Typography>
+                    )}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        color: "text.secondary",
+                      }}
+                    >
+                      <Visibility fontSize="small" />
+                      <Typography variant="caption">
+                        {article.views || 0}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12}>
+              <Typography variant="body1">
+                No articles found in this category.
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       ) : (
         <Grid container spacing={3} className="categories-grid">
           {filteredCategories.map((category) => (
             <Grid item xs={12} sm={6} md={4} key={category.id}>
-              <CategoryCard
-                category={category}
+              <Box
                 onClick={() => handleCategoryCardClick(category.id)}
-              />
+                sx={{
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: "#f8f9fa",
+                  border: "1px solid rgba(0,0,0,0.05)",
+                  cursor: "pointer",
+                  transition: "all .2s ease",
+                  "&:hover": {
+                    bgcolor: "#ee5a24",
+                    color: "#fff",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  {category.name}
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                  Explore latest {category.name.toLowerCase()} stories
+                </Typography>
+              </Box>
             </Grid>
           ))}
         </Grid>

@@ -3,7 +3,10 @@ import { Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Home from "../pages/_Home/Home";
 import Products from "../pages/Products/Products";
+import News from "../pages/News/News";
+import ArticleDetails from "../pages/ArticleDetails/ArticleDetails";
 import Categories from "../pages/Categories/Categories";
+import Trending from "../pages/Trending/Trending";
 import About from "../pages/About/About";
 import Favorite from "../pages/Favorite/Favorite";
 import Contact from "../pages/Contact/Contact";
@@ -54,9 +57,12 @@ const AppRoutes = () => {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
+      <Route path="/news" element={<News />} />
+      <Route path="/article/:id" element={<ArticleDetails />} />
       <Route path="/products" element={<Products />} />
       <Route path="/categories" element={<Categories />} />
       <Route path="/about" element={<About />} />
+      <Route path="/trending" element={<Trending />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/login" element={<SignIn />} />

@@ -22,57 +22,73 @@ const About = () => {
       name: "Meziany Said",
       role: "CEO & Founder",
       image: require("../../assets/images/seo.jpg"),
-      bio: "Passionate about creating the best shopping experience.",
+      bio: "",
     },
   ];
 
   const values = [
     {
       icon: <StoreIcon />,
-      title: "Quality Products",
+      title: "Trusted Reporting",
       description:
-        "We offer only the highest quality products from trusted brands.",
+        "Independent journalism with fact-checked stories and clear sourcing.",
     },
     {
       icon: <ShippingIcon />,
-      title: "Fast Delivery",
-      description: "Quick and reliable shipping to your doorstep.",
+      title: "Fast Updates",
+      description: "Real-time coverage and breaking alerts around the clock.",
     },
     {
       icon: <SecurityIcon />,
-      title: "Secure Shopping",
+      title: "Secure & Private",
       description:
-        "Your security is our top priority with encrypted transactions.",
+        "Responsible data practices to protect your privacy and preferences.",
     },
     {
       icon: <SupportIcon />,
-      title: "24/7 Support",
-      description: "Our customer support team is always here to help.",
+      title: "Community Support",
+      description: "We listen, respond, and improve with our readers.",
     },
   ];
 
   return (
     <Box className="about-page">
       {/* Hero Section */}
-      <Box className="hero-section">
-        <video
-          className="hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={shop1}
-        >
-          <source src={shop1} type="video/mp4" />
-        </video>
-        <Box className="hero-overlay" />
+      <Box
+        className="hero-section"
+        sx={{
+          background:
+            "radial-gradient(1200px 600px at 10% 10%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 60%), linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0b1020 100%)",
+          pt: { xs: 4, sm: 6 },
+          pb: { xs: 4, sm: 6 },
+        }}
+      >
         <Container maxWidth="lg">
-          <Box className="hero-content">
-            <Typography variant="h1" className="hero-title">
-              About ZonShop
+          <Box sx={{ textAlign: "center", color: "white" }}>
+            <Typography
+              variant="overline"
+              sx={{ color: "rgba(255,255,255,0.8)" }}
+            >
+              About
             </Typography>
-            <Typography variant="h5" className="hero-subtitle">
-              Your One-Stop Shop for Quality Products
+            <Typography variant="h3" sx={{ fontWeight: 800, color: "white" }}>
+              About {""}
+              <span
+                style={{
+                  background: "linear-gradient(135deg, #ff6b6b, #ee5a24)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                NewsSphere
+              </span>
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{ color: "rgba(255,255,255,0.85)", mt: 1 }}
+            >
+              Independent reporting. Real-time updates. Insights that matter.
             </Typography>
           </Box>
         </Container>
@@ -83,52 +99,102 @@ const About = () => {
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
             <Box className="company-info-content">
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
+                <Box
+                  sx={{
+                    px: 1.25,
+                    py: 0.5,
+                    bgcolor: "#eef2ff",
+                    color: "#4f46e5",
+                    borderRadius: 9999,
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                >
+                  Since 2025
+                </Box>
+                <Box
+                  sx={{
+                    px: 1.25,
+                    py: 0.5,
+                    bgcolor: "#fff7ed",
+                    color: "#ea580c",
+                    borderRadius: 9999,
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                >
+                  Independent & Ad‑Light
+                </Box>
+              </Box>
+
               <Typography variant="h2" className="section-title">
-                Our Story
+                NewsSphere
               </Typography>
               <Typography variant="body1" className="section-text">
-                Founded in 2025, ZonShop has grown from a small startup to a
-                leading e-commerce platform. We partner directly with Amazon to
-                bring you the best selection of products at competitive prices.
-                All our products are sourced from Amazon's trusted marketplace,
-                ensuring quality, reliability, and fast delivery through
-                Amazon's extensive fulfillment network.
+                NewsSphere is a modern newsroom built for clarity. We combine
+                real‑time reporting with deep analysis to help readers navigate
+                technology, politics, business, science, sports, and culture.
               </Typography>
               <Typography
                 variant="body1"
                 className="section-text"
                 sx={{ mt: 2 }}
               >
-                As an authorized Amazon affiliate, we carefully curate our
-                product selection to bring you the most popular and highly-rated
-                items from Amazon's vast catalog. This partnership allows us to
-                offer you the same great prices, Prime shipping options, and
-                customer service that Amazon is known for, while providing a
-                more personalized shopping experience.
+                Our editors follow strict sourcing standards and verification
+                workflows. From breaking alerts to investigative features, our
+                mission is simple: deliver facts with context and nuance.
               </Typography>
+
               <Box className="stats-container">
                 <Box className="stat-item">
-                  <Typography variant="h3">10K+</Typography>
-                  <Typography variant="body2">Happy Customers</Typography>
+                  <Typography variant="h3">250K+</Typography>
+                  <Typography variant="body2">Monthly Readers</Typography>
                 </Box>
                 <Box className="stat-item">
-                  <Typography variant="h3">500+</Typography>
-                  <Typography variant="body2">Products</Typography>
+                  <Typography variant="h3">12K+</Typography>
+                  <Typography variant="body2">Published Articles</Typography>
                 </Box>
                 <Box className="stat-item">
-                  <Typography variant="h3">24/7</Typography>
-                  <Typography variant="body2">Support</Typography>
+                  <Typography variant="h3">95%</Typography>
+                  <Typography variant="body2">Reader Trust Index</Typography>
                 </Box>
               </Box>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Box className="company-image">
-              <img
-                src="https://images.unsplash.com/photo-1557821552-17105176677c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                alt="Our Store"
-              />
-            </Box>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Box
+                  className="company-image"
+                  sx={{ borderRadius: 2, overflow: "hidden" }}
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1640&auto=format&fit=crop"
+                    alt="Newsroom"
+                    style={{ width: "100%", height: 360, objectFit: "cover" }}
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
+                  <img
+                    src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=800&auto=format&fit=crop"
+                    alt="Field reporting"
+                    style={{ width: "100%", height: 160, objectFit: "cover" }}
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box sx={{ borderRadius: 2, overflow: "hidden" }}>
+                  <img
+                    src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop"
+                    alt="Editorial meeting"
+                    style={{ width: "100%", height: 160, objectFit: "cover" }}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Container>

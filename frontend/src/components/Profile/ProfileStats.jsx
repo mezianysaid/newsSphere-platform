@@ -5,6 +5,10 @@ import {
   Favorite,
   People,
   Visibility,
+  Article,
+  Publish,
+  Drafts,
+  TrendingUp,
 } from "@mui/icons-material";
 
 import "./ProfileStats.scss";
@@ -26,44 +30,60 @@ const StatCard = ({ icon: Icon, title, value, color }) => (
 );
 
 const ProfileStats = ({ statistics }) => {
- 
-
   return (
     <Box className="profile-stats">
       <Typography variant="h6" className="stats-title" gutterBottom>
-        Your Statistics
+        Platform Statistics
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            icon={ShoppingCart}
-            title="Total Products"
-            value={statistics.totalProducts}
+            icon={Article}
+            title="Total Articles"
+            value={statistics.totalArticles}
             color="#2196f3"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            icon={Favorite}
-            title="Wishlist Items"
-            value={statistics.totalFavorites}
-            color="#f44336"
+            icon={Publish}
+            title="Published"
+            value={statistics.publishedArticles}
+            color="#4caf50"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            icon={People}
-            title="Total Users"
-            value={statistics.totalUsers}
+            icon={Drafts}
+            title="Draft Articles"
+            value={statistics.draftArticles}
             color="#ff9800"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
+            icon={TrendingUp}
+            title="Total Views"
+            value={statistics.totalViews}
+            color="#9c27b0"
+          />
+        </Grid>
+       
+        <Grid item xs={12} sm={6} md={3}>
+          <StatCard
+            icon={People}
+            title="Total Users"
+            value={statistics.totalUsers}
+            color="#795548"
+          />
+        </Grid>
+       
+        <Grid item xs={12} sm={6} md={3}>
+          <StatCard
             icon={Visibility}
             title="Profile Views"
             value={statistics.totalVisitors}
-            color="#4caf50"
+            color="#00bcd4"
           />
         </Grid>
       </Grid>

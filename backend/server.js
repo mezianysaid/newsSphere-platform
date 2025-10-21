@@ -13,6 +13,7 @@ const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes");
 const contactRoutes = require("./routes/contactRoutes");
+const articleRoutes = require("./routes/articleRoutes");
 
 // Import middleware
 const { protect, admin } = require("./middleware/authMiddleware");
@@ -52,6 +53,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/admin", protect, adminRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/articles", articleRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

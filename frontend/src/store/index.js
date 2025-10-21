@@ -12,6 +12,7 @@ export const store = configureStore({
     user: userReducer,
     email: emailReducer,
     visitors: visitorReducer,
+    articles: require("./reducers/articleReducer").default,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

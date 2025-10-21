@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getImageUrl } from "../../utils/imageUtils";
 import {
   Box,
   Container,
@@ -9,20 +10,27 @@ import {
   CardContent,
   CardMedia,
   Button,
-  Rating,
   Chip,
+  Avatar,
+  Paper,
+  Divider,
+  Stack,
 } from "@mui/material";
 import {
-  ShoppingCart,
-  Star,
-  LocalOffer,
-  FlashOn,
+  Article,
   TrendingUp,
   Category,
+  Schedule,
+  Person,
+  Visibility,
+  AccessTime,
+  BookmarkBorder,
+  Share,
+  MoreVert,
 } from "@mui/icons-material";
 import "./Home.scss";
 import { useNavigate } from "react-router-dom";
-import { getProducts } from "../../store/actions/productActions";
+import { fetchArticles } from "../../store/actions/articleActions";
 
 // import images
 import spor1 from "../../assets/images/spor1.jpg";
@@ -48,99 +56,123 @@ const heroImages = [
   {
     id: 1,
     image: shop1,
-    title: "New Collection",
-    description: "Discover our latest arrivals",
+    title: "Breaking News",
+    description: "Stay updated with the latest developments",
   },
   {
     id: 2,
     image: shop2,
-    title: "Special Offers",
-    description: "Up to 50% off on selected items",
+    title: "In-Depth Analysis",
+    description: "Comprehensive coverage of important stories",
   },
   {
     id: 3,
     image: shop3,
-    title: "Trending Now",
-    description: "Shop the most popular items",
+    title: "Expert Opinions",
+    description: "Insights from industry leaders",
   },
   {
     id: 4,
     image: shop4,
-    title: "Limited Time",
-    description: "Don't miss out on these deals",
+    title: "Global Coverage",
+    description: "News from around the world",
   },
   {
     id: 5,
     image: shop5,
-    title: "Featured Products",
-    description: "Check out our best sellers",
+    title: "Trending Topics",
+    description: "What everyone is talking about",
   },
 ];
 
-// Featured Categories Data
-const categories = [
+// Mock Featured Articles for Testing
+const mockFeaturedArticles = [
   {
-    id: 1,
-    name: "Electronics",
-    image: elec2,
-    count: "120+ Products",
+    _id: "mock-1",
+    title:
+      "AI Breakthrough: Google's New Language Model Shows 40% Improvement in Reasoning",
+    excerpt:
+      "Google researchers announce a major advancement in artificial intelligence that could revolutionize how we interact with technology.",
+    author: "Sarah Chen",
+    category: "Technology",
+    publishedAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    views: 15420,
+    coverImage: null, // Will use placeholder
   },
   {
-    id: 2,
-    name: "Fashion & Beauty",
-    image: fash1,
-    count: "200+ Products",
+    _id: "mock-2",
+    title:
+      "Global Climate Summit Reaches Historic Agreement on Carbon Reduction",
+    excerpt:
+      "World leaders commit to unprecedented measures to combat climate change, setting new targets for 2030.",
+    author: "Michael Rodriguez",
+    category: "Politics",
+    publishedAt: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+    views: 8930,
+    coverImage: null,
   },
   {
-    id: 3,
-    name: "Home & Living",
-    image: home2,
-    count: "150+ Products",
+    _id: "mock-3",
+    title: "Stock Markets Hit Record Highs as Tech Sector Surges",
+    excerpt:
+      "Major indices close at all-time highs following strong earnings reports from leading technology companies.",
+    author: "Jennifer Walsh",
+    category: "Business",
+    publishedAt: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
+    views: 12350,
+    coverImage: null,
   },
   {
-    id: 4,
-    name: "Sports",
-    image: spor1,
-    count: "80+ Products",
+    _id: "mock-4",
+    title: "Olympic Games 2024: New Records Set in Swimming and Track Events",
+    excerpt:
+      "Athletes from around the world break multiple world records in an exciting day of competition.",
+    author: "David Thompson",
+    category: "Sports",
+    publishedAt: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
+    views: 18760,
+    coverImage: null,
   },
 ];
 
-// Special Offers Data
-const specialOffers = [
+// Featured Stories Data
+const featuredStories = [
   {
     id: 1,
-    title: "Flash Sale",
-    description: "Up to 50% off on Electronics",
+    title: "Breaking News Alert",
+    description: "Major developments in global markets",
     image: sale2,
-    endDate: "2024-03-25",
+    category: "Business",
   },
   {
     id: 2,
-    title: "New Arrivals",
-    description: "Latest Fashion Collection",
+    title: "Technology Update",
+    description: "Latest innovations changing the world",
     image: arriv2,
-    endDate: "2024-03-30",
+    category: "Technology",
   },
 ];
 
 const Home = () => {
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Get products from Redux store
-  const { products, loading } = useSelector((state) => state.products);
-
-  // Get favorite items to check if a product is already in favorites
-  // const favoriteItems = useSelector((state) => state.favorites.items);
-
-  // Get featured products (first 4 products or fewer if less than 4)
+  // Get articles from Redux store
+  const { articles, loading } = useSelector((state) => state.articles);
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // First, create a utility function to shuffle arrays (can be in a separate file)
+  // Get latest articles (first 6 articles or mock data)
+  const latestArticles = useMemo(() => {
+    if (articles && articles.length > 0) {
+      return articles.slice(0, 6);
+    }
+    // Return mock articles when no real data
+    return mockFeaturedArticles.slice(0, 6);
+  }, [articles]);
+
+  // Get trending articles (shuffled for demo)
   const shuffleArray = (array) => {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
@@ -149,18 +181,23 @@ const Home = () => {
     }
     return newArray;
   };
-  // Inside your component
-  const shuffledProducts = useMemo(() => {
-    return shuffleArray(products);
-  }, [products]); // Only reshuffles when featuredProducts changes
 
-  const featuredProducts = shuffledProducts?.slice(0, 4) || [];
-  useEffect(() => {
-    // Fetch products if not already loaded
-    if (!products || products.length === 0) {
-      dispatch(getProducts());
+  const trendingArticles = useMemo(() => {
+    if (articles && articles.length > 0) {
+      return shuffleArray(articles).slice(0, 4);
     }
-  }, [dispatch]);
+    // Return shuffled mock articles when no real data
+    return shuffleArray(mockFeaturedArticles).slice(0, 4);
+  }, [articles]);
+
+  // Hero simplified: no featured article card needed
+
+  useEffect(() => {
+    // Fetch articles if not already loaded
+    if (!articles || articles.length === 0) {
+      dispatch(fetchArticles());
+    }
+  }, [dispatch, articles]);
 
   // Auto-advance carousel
   useEffect(() => {
@@ -177,238 +214,218 @@ const Home = () => {
     navigate(path);
   };
 
+  const formatTimeAgo = (date) => {
+    const now = new Date();
+    const articleDate = new Date(date);
+    const diffInHours = Math.floor((now - articleDate) / (1000 * 60 * 60));
+
+    if (diffInHours < 1) return "Just now";
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays}d ago`;
+  };
+
   return (
     <Box className="home-page">
-      {/* Hero Section */}
-      <Box className="hero-section">
+      {/* Breaking News Banner */}
+      <Box className="breaking-news-banner">
         <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography variant="h1" className="hero-title">
-                Discover Amazing Products at Great Prices
-              </Typography>
-              <Typography variant="h5" className="hero-subtitle">
-                Shop the latest trends with exclusive discounts
-              </Typography>
-              <Box className="hero-buttons">
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<ShoppingCart />}
-                  className="shop-now-btn"
-                  onClick={() => handleNavigationClick("/products")}
-                >
-                  Shop Now
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="large"
-                  startIcon={<Category />}
-                  className="browse-categories-btn"
-                  onClick={() => handleNavigationClick("/categories")}
-                >
-                  Browse Categories
-                </Button>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box className="hero-carousel">
-                {heroImages.map((slide, index) => (
-                  <Box
-                    key={slide.id}
-                    className={`carousel-slide ${
-                      index === currentSlide ? "active" : ""
-                    }`}
-                    sx={{
-                      position: "absolute",
-                      width: "100%",
-                      height: "100%",
-                      opacity: index === currentSlide ? 1 : 0,
-                      transition: "opacity 0.5s ease-in-out",
-                    }}
-                  >
-                    <img src={slide.image} alt={slide.title} />
-                    <Box className="carousel-content">
-                      <Typography variant="h4">{slide.title}</Typography>
-                      <Typography variant="h6">{slide.description}</Typography>
-                    </Box>
-                  </Box>
-                ))}
-                <Box className="carousel-indicators">
-                  {heroImages.map((_, index) => (
-                    <Box
-                      key={index}
-                      className={`indicator ${
-                        index === currentSlide ? "active" : ""
-                      }`}
-                      onClick={() => setCurrentSlide(index)}
-                    />
-                  ))}
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
+          <Box className="breaking-content">
+            <Chip
+              label="BREAKING"
+              color="error"
+              size="small"
+              className="breaking-chip"
+            />
+            <Typography variant="body1" className="breaking-text">
+              Stay updated with the latest breaking news and developments from
+              around the world
+            </Typography>
+          </Box>
         </Container>
       </Box>
 
-      {/* Featured Categories */}
-      <Container maxWidth="lg" className="section-container">
-        <Box className="section-header">
-          <Typography variant="h2">Shop by Category</Typography>
-          <Button
-            variant="text"
-            onClick={() => handleNavigationClick("/categories")}
-            endIcon={<TrendingUp />}
-          >
-            View All
-          </Button>
-        </Box>
-        <Grid container spacing={3}>
-          {categories.map((category) => (
-            <Grid item xs={6} md={3} key={category.id}>
-              <Card
-                className="category-card"
-                onClick={() => handleNavigationClick(`/categories`)}
-              >
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={category.image}
-                  alt={category.name}
-                />
-                <CardContent>
-                  <Typography variant="h6">{category.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {category.count}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+      {/* Hero Section */}
+      <Box className="hero-section">
+        {/* Background (video removed) */}
+        <Box className="hero-video-background"></Box>
 
-      {/* Special Offers */}
-      <Container maxWidth="lg" className="section-container">
-        <Box className="section-header">
-          <Typography variant="h2">Special Offers</Typography>
-          <Button variant="text" endIcon={<FlashOn />}>
-            View All
-          </Button>
-        </Box>
-        <Grid container spacing={3}>
-          {specialOffers.map((offer) => (
-            <Grid item xs={12} md={6} key={offer.id}>
-              <Card className="offer-card">
-                <CardMedia
-                  component="img"
-                  height="300"
-                  image={offer.image}
-                  alt={offer.title}
+        <Container maxWidth="lg">
+          <Box className="hero-content">
+            {/* Modern, focused hero */}
+            <Box className="hero-text modern">
+              <Typography variant="overline" className="hero-eyebrow">
+                Trusted journalism
+              </Typography>
+              <Typography variant="h1" className="hero-title">
+                Stay informed.
+                <span className="gradient-text"> Act with clarity.</span>
+              </Typography>
+              <Typography variant="h6" className="hero-subtitle">
+                Real-time reporting, expert analysis, and trends that matter.
+              </Typography>
+              <Box className="hero-actions">
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<Article />}
+                  className="primary-btn"
+                  onClick={() => handleNavigationClick("/news")}
+                >
+                  Read latest
+                </Button>
+                <Button
+                  variant="text"
+                  size="large"
+                  startIcon={<TrendingUp />}
+                  className="secondary-link"
+                  onClick={() => handleNavigationClick("/news")}
+                >
+                  Explore trends
+                </Button>
+              </Box>
+              <Box className="hero-stats">
+                <Box className="stat">
+                  <Visibility fontSize="small" />
+                  <span>120k+ monthly readers</span>
+                </Box>
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  className="stat-divider"
                 />
-                <CardContent className="offer-content">
-                  <Typography variant="h4">{offer.title}</Typography>
-                  <Typography variant="h6">{offer.description}</Typography>
-                  <Button
-                    variant="contained"
-                    className="offer-button"
-                    endIcon={<LocalOffer />}
-                    onClick={() => handleNavigationClick("/products")}
-                  >
-                    Shop Now
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+                <Box className="stat">
+                  <Article fontSize="small" />
+                  <span>8k+ articles</span>
+                </Box>
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  className="stat-divider"
+                />
+                <Box className="stat">
+                  <Category fontSize="small" />
+                  <span>15+ categories</span>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
 
-      {/* Featured Products */}
+      {/* Latest News Section */}
       <Container maxWidth="lg" className="section-container">
         <Box className="section-header">
-          <Typography variant="h2">Featured Products</Typography>
+          <Typography variant="h4" className="section-title">
+            Latest News
+          </Typography>
           <Button
-            variant="text"
-            endIcon={<Star />}
-            onClick={() => handleNavigationClick("/products")}
+            variant="outlined"
+            onClick={() => handleNavigationClick("/news")}
+            endIcon={<Article />}
+            className="view-all-btn"
           >
-            View All
+            View All Articles
           </Button>
         </Box>
-        <Grid container spacing={3}>
-          {loading ? (
-            // Show loading state
-            <Grid item xs={12}>
-              <Typography>Loading products...</Typography>
-            </Grid>
-          ) : featuredProducts.length > 0 ? (
-            // Show featured products
-            featuredProducts.map((product) => (
-              <Grid item xs={6} md={3} key={product._id}>
+
+        {loading ? (
+          <Box className="loading-state">
+            <Typography variant="h6">Loading latest articles...</Typography>
+          </Box>
+        ) : (
+          <Grid container spacing={3}>
+            {latestArticles.map((article, index) => (
+              <Grid item xs={12} sm={6} md={4} key={article._id}>
                 <Card
-                  className="product-card"
+                  className="news-card"
                   onClick={() =>
-                    handleNavigationClick(`/product/${product._id}`)
+                    handleNavigationClick(`/article/${article._id}`)
                   }
                 >
-                  <Box className="product-image">
-                    <img
-                      src={
-                        process.env.REACT_APP_API_URL + product.images?.[0] ||
-                        "../../assets/images/home1.jpg"
-                      }
-                      alt={product.name}
-                    />
-                  </Box>
-                  <CardContent>
-                    <Typography variant="h6" className="product-name">
-                      {product.name}
-                    </Typography>
-                    <Box className="product-rating">
-                      <Rating
-                        value={product.rating || 0}
-                        precision={0.5}
-                        readOnly
+                  <Box className="news-image">
+                    {article.coverImage ? (
+                      <img
+                        src={getImageUrl(article.coverImage)}
+                        alt={article.title}
+                        crossOrigin="anonymous"
                       />
-                    </Box>
-                    <Box className="product-price">
-                      <Typography variant="h6" color="primary">
-                        ${product.price}
-                      </Typography>
-                      {product.discount > 0 && (
-                        <Chip
-                          label={`${product.discount}% OFF`}
-                          color="error"
-                          size="small"
-                        />
-                      )}
-                    </Box>
-                    {product.isNew && (
-                      <Chip
-                        label="New"
-                        color="success"
-                        size="small"
-                        className="new-badge"
+                    ) : (
+                      <img
+                        src={[shop1, shop2, shop3, shop4, shop5][index % 5]} // Use different placeholder images
+                        alt={article.title}
                       />
                     )}
+                    <Box className="news-overlay">
+                      <Chip
+                        label={article.category}
+                        size="small"
+                        color="primary"
+                        className="news-category"
+                      />
+                    </Box>
+                  </Box>
+                  <CardContent className="news-content">
+                    <Typography variant="h6" className="news-title">
+                      {article.title}
+                    </Typography>
+                    {article.excerpt && (
+                      <Typography variant="body2" className="news-excerpt">
+                        {article.excerpt}
+                      </Typography>
+                    )}
+                    <Box className="news-meta">
+                      <Box className="news-author">
+                        <Person fontSize="small" />
+                        <Typography variant="caption">
+                          {article.author}
+                        </Typography>
+                      </Box>
+                      <Box className="news-stats">
+                        <AccessTime fontSize="small" />
+                        <Typography variant="caption">
+                          {formatTimeAgo(article.publishedAt)}
+                        </Typography>
+                        <Visibility fontSize="small" />
+                        <Typography variant="caption">
+                          {article.views || 0}
+                        </Typography>
+                      </Box>
+                    </Box>
                   </CardContent>
                 </Card>
               </Grid>
-            ))
-          ) : (
-            // Show empty state
-            <Grid item xs={12}>
-              <Typography>No featured products available</Typography>
-            </Grid>
-          )}
-        </Grid>
+            ))}
+          </Grid>
+        )}
       </Container>
 
-      {/* Footer
-      
-      <Footer />
-      */}
+      {/* Newsletter Subscription */}
+      <Box className="newsletter-section">
+        <Container maxWidth="md">
+          <Paper className="newsletter-card">
+            <Box className="newsletter-content">
+              <Typography variant="h4" className="newsletter-title">
+                Stay Updated
+              </Typography>
+              <Typography variant="body1" className="newsletter-subtitle">
+                Get the latest news delivered directly to your inbox
+              </Typography>
+              <Box className="newsletter-form">
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<Article />}
+                  onClick={() => handleNavigationClick("/news")}
+                  className="subscribe-btn"
+                >
+                  Subscribe to Newsletter
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        </Container>
+      </Box>
     </Box>
   );
 };

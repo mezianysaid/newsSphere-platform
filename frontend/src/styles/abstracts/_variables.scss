@@ -1,5 +1,5 @@
 // Colors
-$primary-color: #6366f1;
+$primary-color: #ee5a24;
 $secondary-color: #08f8a8;
 $accent-color: #818cf8;
 $background-color: #f3f4f6;
@@ -25,6 +25,20 @@ $warning-color: #f59e0b;
 $info-color: #3b82f6;
 $light-color: #f8f9fa;
 $dark-color: #343a40;
+
+// Brand Gradients
+$primary-gradient: linear-gradient(
+  135deg,
+  #0f172a 0%,
+  #1e293b 50%,
+  #0b1020 100%
+);
+$primary-gradient-soft: radial-gradient(
+    1200px 600px at 10% 10%,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0) 60%
+  ),
+  $primary-gradient;
 
 // Typography
 $font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",

@@ -16,6 +16,7 @@ import {
 
 import { getProducts } from "../../store/actions/productActions";
 import { getAllUsers } from "../../store/actions/userActions";
+import { fetchArticles } from "../../store/actions/articleActions";
 
 const Profile = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -27,6 +28,9 @@ const Profile = () => {
   const { allUsers, loading: usersLoading } = useSelector(
     (state) => state.user
   );
+  const { articles, loading: articlesLoading } = useSelector(
+    (state) => state.articles
+  );
   const favoriteItems = useSelector((state) => state.favorites.items);
   const visitorCount = useSelector((state) => state.visitors.count);
 
@@ -35,29 +39,51 @@ const Profile = () => {
     totalUsers: 0,
     totalFavorites: 0,
     totalRevenue: 0,
+    totalArticles: 0,
+    publishedArticles: 0,
+    draftArticles: 0,
+    totalViews: 0,
     recentProducts: [],
     recentUsers: [],
+    recentArticles: [],
     totalVisitors: 0,
   });
 
   useEffect(() => {
     dispatch(getProducts());
     dispatch(getAllUsers());
+    dispatch(fetchArticles());
   }, [dispatch]);
 
   useEffect(() => {
-    if (products && allUsers) {
+    if (products && allUsers && articles) {
+      const publishedArticles = articles.filter(
+        (article) => article.status === "published"
+      );
+      const draftArticles = articles.filter(
+        (article) => article.status === "draft"
+      );
+      const totalViews = articles.reduce(
+        (sum, article) => sum + (article.views || 0),
+        0
+      );
+
       setStatistics((prevStats) => ({
         ...prevStats,
         totalProducts: products.length,
         totalUsers: allUsers.length,
         totalFavorites: favoriteItems.length,
         totalVisitors: visitorCount,
+        totalArticles: articles.length,
+        publishedArticles: publishedArticles.length,
+        draftArticles: draftArticles.length,
+        totalViews: totalViews,
         recentProducts: products.slice(0, 5),
         recentUsers: allUsers.slice(0, 5),
+        recentArticles: articles.slice(0, 5),
       }));
     }
-  }, [products, allUsers, favoriteItems, visitorCount]);
+  }, [products, allUsers, articles, favoriteItems, visitorCount]);
 
   // Create a user object with fallback values for missing properties
   const userWithFallbacks = user
@@ -87,7 +113,7 @@ const Profile = () => {
     );
   }
 
-  if (loading || usersLoading) {
+  if (loading || usersLoading || articlesLoading) {
     return (
       <Container sx={{ display: "flex", justifyContent: "center", py: 5 }}>
         <CircularProgress />
@@ -118,7 +144,7 @@ const Profile = () => {
         {userWithFallbacks.role === "admin" && (
           <ProfileStats statistics={statistics} />
         )}
-        <ProfileDetails user={userWithFallbacks} />
+        <ProfileDetails user={userWithFallbacks} statistics={statistics} />
       </Container>
     </div>
   );

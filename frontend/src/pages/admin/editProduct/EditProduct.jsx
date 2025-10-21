@@ -13,43 +13,50 @@ import {
   Snackbar,
   Alert,
   CircularProgress,
+  Chip,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  fetchProduct,
-  updateProduct,
-} from "../../../store/actions/productActions";
+  fetchArticle,
+  updateArticle,
+} from "../../../store/actions/articleActions";
 
 const categories = [
-  "Electronics",
-  "Clothing",
-  "Books",
-  "Home & Garden",
+  "Technology",
+  "Business",
+  "Health",
+  "Lifestyle",
+  "Travel",
+  "Food",
   "Sports",
-  "Beauty",
-  "Toys",
-  "Other",
+  "Entertainment",
+  "Education",
+  "Science",
+  "Others",
 ];
 
-const EditProduct = () => {
+const EditArticle = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { product, loading, error } = useSelector((state) => ({
-    product: state.products.product?.data,
-    loading: state.products.loading,
-    error: state.products.error,
+  const { article, loading, error } = useSelector((state) => ({
+    article: state.articles.article?.data,
+    loading: state.articles.loading,
+    error: state.articles.error,
   }));
 
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
+    title: "",
+    excerpt: "",
+    content: "",
+    author: "",
     category: "",
-    productLink: "",
-    images: [],
+    status: "published",
+    tags: [],
   });
+
+  const [tagInput, setTagInput] = useState("");
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -58,32 +65,33 @@ const EditProduct = () => {
   });
 
   useEffect(() => {
-    const loadProduct = async () => {
+    const loadArticle = async () => {
       try {
-        await dispatch(fetchProduct(id));
+        await dispatch(fetchArticle(id));
       } catch (error) {
         setSnackbar({
           open: true,
-          message: "Failed to load product details",
+          message: "Failed to load article details",
           severity: "error",
         });
       }
     };
-    loadProduct();
+    loadArticle();
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (product) {
+    if (article) {
       setFormData({
-        name: product.name || "",
-        description: product.description || "",
-        price: product.price || "",
-        category: product.category || "",
-        productLink: product.productLink || "",
-        images: product.images || [],
+        title: article.title || "",
+        excerpt: article.excerpt || "",
+        content: article.content || "",
+        author: article.author || "",
+        category: article.category || "",
+        status: article.status || "published",
+        tags: article.tags || [],
       });
     }
-  }, [product]);
+  }, [article]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,20 +101,37 @@ const EditProduct = () => {
     });
   };
 
+  const handleTagAdd = () => {
+    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
+      setFormData((prev) => ({
+        ...prev,
+        tags: [...prev.tags, tagInput.trim()],
+      }));
+      setTagInput("");
+    }
+  };
+
+  const handleTagRemove = (tagToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((tag) => tag !== tagToRemove),
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(updateProduct(id, formData));
+      await dispatch(updateArticle(id, formData));
       setSnackbar({
         open: true,
-        message: "Product updated successfully",
+        message: "Article updated successfully",
         severity: "success",
       });
       navigate("/admin/listProducts");
     } catch (error) {
       setSnackbar({
         open: true,
-        message: error.message || "Failed to update product",
+        message: error.message || "Failed to update article",
         severity: "error",
       });
     }
@@ -137,10 +162,10 @@ const EditProduct = () => {
     );
   }
 
-  if (!product) {
+  if (!article) {
     return (
       <Box sx={{ p: 3 }}>
-        <Alert severity="warning">Product not found</Alert>
+        <Alert severity="warning">Article not found</Alert>
       </Box>
     );
   }
@@ -148,7 +173,7 @@ const EditProduct = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Edit Product
+        Edit Article
       </Typography>
 
       <Paper sx={{ p: 3, mt: 3 }}>
@@ -157,50 +182,66 @@ const EditProduct = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Product Name"
-                name="name"
-                value={formData.name}
+                label="Article Title"
+                name="title"
+                value={formData.title}
                 onChange={handleChange}
                 required
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Author"
+                name="author"
+                value={formData.author}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Status</InputLabel>
+                <Select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  label="Status"
+                  required
+                >
+                  <MenuItem value="published">Published</MenuItem>
+                  <MenuItem value="draft">Draft</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Excerpt"
+                name="excerpt"
+                value={formData.excerpt}
+                onChange={handleChange}
+                multiline
+                rows={3}
+                required
+                placeholder="Brief summary of the article..."
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Description"
-                name="description"
-                value={formData.description}
+                label="Content"
+                name="content"
+                value={formData.content}
                 onChange={handleChange}
                 multiline
-                rows={4}
+                rows={8}
                 required
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="Price"
-                name="price"
-                type="number"
-                value={formData.price}
-                onChange={handleChange}
-                required
-                InputProps={{
-                  startAdornment: "$",
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                label="Product Link"
-                name="productLink"
-                value={formData.productLink}
-                onChange={handleChange}
-                required
+                placeholder="Write your article content here..."
               />
             </Grid>
 
@@ -223,6 +264,55 @@ const EditProduct = () => {
               </FormControl>
             </Grid>
 
+            {/* Tags Section */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                Tags
+              </Typography>
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} md={8}>
+                  <TextField
+                    fullWidth
+                    label="Add Tag"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleTagAdd();
+                      }
+                    }}
+                    placeholder="Type a tag and press Enter"
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Button
+                    variant="outlined"
+                    onClick={handleTagAdd}
+                    disabled={!tagInput.trim()}
+                    fullWidth
+                  >
+                    Add Tag
+                  </Button>
+                </Grid>
+                {formData.tags.length > 0 && (
+                  <Grid item xs={12}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                      {formData.tags.map((tag, index) => (
+                        <Chip
+                          key={index}
+                          label={tag}
+                          onDelete={() => handleTagRemove(tag)}
+                          color="primary"
+                          variant="outlined"
+                        />
+                      ))}
+                    </Box>
+                  </Grid>
+                )}
+              </Grid>
+            </Grid>
+
             <Grid item xs={12}>
               <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
                 <Button
@@ -237,7 +327,7 @@ const EditProduct = () => {
                   color="primary"
                   disabled={loading}
                 >
-                  {loading ? "Updating..." : "Update Product"}
+                  {loading ? "Updating..." : "Update Article"}
                 </Button>
               </Box>
             </Grid>
@@ -263,4 +353,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default EditArticle;

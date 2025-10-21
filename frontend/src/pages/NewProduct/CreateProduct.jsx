@@ -11,9 +11,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  InputAdornment,
   Alert,
   IconButton,
+  Chip,
 } from "@mui/material";
 import {
   CloudUpload as UploadIcon,
@@ -21,56 +21,61 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createProduct, clearErrors } from "../../store/actions/productActions";
-import { CREATE_PRODUCT_RESET } from "../../store/constants/productConstants";
+import {
+  createArticle,
+  clearArticleErrorAction,
+} from "../../store/actions/articleActions";
 import "./CreateProduct.scss";
 
-const CreateProduct = () => {
+const CreateArticle = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { loading, error, success } = useSelector(
-    (state) => state.products || {}
+    (state) => state.articles || {}
   );
 
   const initializeFormData = {
-    name: "",
-    description: "",
-    price: "",
+    title: "",
+    excerpt: "",
+    content: "",
+    author: "",
     category: "",
+    tags: [],
+    coverImage: null,
     images: [],
-    productLink: "",
+    status: "published",
   };
 
   const [formData, setFormData] = useState(initializeFormData);
   const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState([]);
+  const [tagInput, setTagInput] = useState("");
 
   const categories = [
-    "Electronics",
-    "Clothing",
-    "Books",
-    "Home & Kitchen",
-    "Sports",
-    "Beauty",
-    "Toys & Games",
-    "Food & Beverages",
+    "Technology",
+    "Business",
     "Health",
-    "Automotive",
+    "Lifestyle",
+    "Travel",
+    "Food",
+    "Sports",
+    "Entertainment",
+    "Education",
+    "Science",
     "Others",
   ];
 
   useEffect(() => {
     if (error) {
       setTimeout(() => {
-        dispatch(clearErrors());
+        dispatch(clearArticleErrorAction());
       }, 5000);
     }
 
     if (success) {
       setTimeout(() => {
-        dispatch({ type: CREATE_PRODUCT_RESET });
-        navigate("/admin/addProduct");
+        navigate("/news");
       }, 2000);
     }
   }, [dispatch, error, success, navigate]);
@@ -95,44 +100,64 @@ const CreateProduct = () => {
     setImagePreview((prev) => [...prev, ...newPreviews]);
   };
 
+  const handleCoverImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        coverImage: file,
+      }));
+    }
+  };
+
+  const handleTagAdd = () => {
+    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
+      setFormData((prev) => ({
+        ...prev,
+        tags: [...prev.tags, tagInput.trim()],
+      }));
+      setTagInput("");
+    }
+  };
+
+  const handleTagRemove = (tagToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((tag) => tag !== tagToRemove),
+    }));
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Product name is required";
+    if (!formData.title.trim()) {
+      newErrors.title = "Article title is required";
+    } else if (formData.title.length > 160) {
+      newErrors.title = "Title cannot exceed 160 characters";
     }
 
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
+    if (!formData.excerpt.trim()) {
+      newErrors.excerpt = "Excerpt is required";
+    } else if (formData.excerpt.length > 300) {
+      newErrors.excerpt = "Excerpt cannot exceed 300 characters";
     }
 
-    if (!formData.price) {
-      newErrors.price = "Price is required";
-    } else if (isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
-      newErrors.price = "Please enter a valid price (greater than 0)";
+    if (!formData.content.trim()) {
+      newErrors.content = "Content is required";
+    }
+
+    if (!formData.author.trim()) {
+      newErrors.author = "Author is required";
+    } else if (formData.author.length > 60) {
+      newErrors.author = "Author name cannot exceed 60 characters";
     }
 
     if (!formData.category) {
       newErrors.category = "Category is required";
     }
 
-    if (!formData.productLink.trim()) {
-      newErrors.productLink = "Product link is required";
-    } else if (!isValidUrl(formData.productLink)) {
-      newErrors.productLink = "Please enter a valid URL";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const isValidUrl = (url) => {
-    try {
-      new URL(url);
-      return true;
-    } catch (err) {
-      return false;
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -144,32 +169,42 @@ const CreateProduct = () => {
         return;
       }
 
-      const productData = new FormData();
+      const articleData = new FormData();
 
       // Append basic fields with proper validation
-      productData.append("name", formData.name.trim());
-      productData.append("description", formData.description.trim());
-      productData.append("price", Number(formData.price).toString());
-      productData.append("category", formData.category);
-      productData.append("productLink", formData.productLink.trim());
+      articleData.append("title", formData.title.trim());
+      articleData.append("excerpt", formData.excerpt.trim());
+      articleData.append("content", formData.content.trim());
+      articleData.append("author", formData.author.trim());
+      articleData.append("category", formData.category);
+      articleData.append("status", formData.status);
+
+      // Append tags
+      if (formData.tags.length > 0) {
+        formData.tags.forEach((tag) => {
+          articleData.append("tags", tag);
+        });
+      }
+
+      // Append cover image if it exists
+      if (formData.coverImage && formData.coverImage instanceof File) {
+        articleData.append("coverImage", formData.coverImage);
+      }
 
       // Append images only if they exist
       if (formData.images && formData.images.length > 0) {
         formData.images.forEach((image) => {
           if (image instanceof File) {
-            productData.append("images", image);
+            articleData.append("images", image);
           }
         });
       }
 
-      await dispatch(createProduct(productData));
+      await dispatch(createArticle(articleData));
       setFormData(initializeFormData);
       setImagePreview([]);
     } catch (err) {
-      dispatch({
-        type: CREATE_PRODUCT_RESET,
-        payload: err.message || "Error creating product",
-      });
+      console.error("Error creating article:", err);
     }
   };
 
@@ -179,13 +214,13 @@ const CreateProduct = () => {
         <Paper className="form-container">
           <Box className="form-header">
             <IconButton
-              onClick={() => navigate("/admin/listProducts")}
+              onClick={() => navigate("/news")}
               className="back-button"
             >
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h5" component="h1">
-              Create New Product
+              Create New Article
             </Typography>
           </Box>
 
@@ -197,7 +232,7 @@ const CreateProduct = () => {
 
           {success && (
             <Alert severity="success" className="alert">
-              Product created successfully!
+              Article created successfully!
             </Alert>
           )}
 
@@ -219,20 +254,33 @@ const CreateProduct = () => {
               {/* Basic Information */}
               <Grid item xs={12}>
                 <Typography variant="h6" className="section-title">
-                  Basic Information
+                  Article Information
                 </Typography>
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Article Title"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                  error={!!errors.title}
+                  helperText={errors.title}
+                />
               </Grid>
 
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Product Name"
-                  name="name"
-                  value={formData.name}
+                  label="Author"
+                  name="author"
+                  value={formData.author}
                   onChange={handleChange}
                   required
-                  error={!!errors.name}
-                  helperText={errors.name}
+                  error={!!errors.author}
+                  helperText={errors.author}
                 />
               </Grid>
 
@@ -260,69 +308,136 @@ const CreateProduct = () => {
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Product Link"
-                  name="productLink"
-                  value={formData.productLink}
-                  onChange={handleChange}
-                  required
-                  error={!!errors.productLink}
-                  helperText={errors.productLink}
-                  placeholder="https://amzn.to/..."
-                />
+                <FormControl fullWidth>
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                    label="Status"
+                  >
+                    <MenuItem value="published">Published</MenuItem>
+                    <MenuItem value="draft">Draft</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
 
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Price"
-                  name="price"
-                  type="number"
-                  value={formData.price}
-                  onChange={handleChange}
-                  required
-                  error={!!errors.price}
-                  helperText={errors.price}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">$</InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-
-              {/* Description */}
+              {/* Excerpt */}
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Description"
-                  name="description"
-                  value={formData.description}
+                  label="Excerpt"
+                  name="excerpt"
+                  value={formData.excerpt}
                   onChange={handleChange}
                   required
                   multiline
-                  rows={4}
-                  error={!!errors.description}
-                  helperText={errors.description}
+                  rows={3}
+                  error={!!errors.excerpt}
+                  helperText={errors.excerpt}
+                  placeholder="Brief summary of the article..."
                 />
               </Grid>
+
+              {/* Content */}
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Content"
+                  name="content"
+                  value={formData.content}
+                  onChange={handleChange}
+                  required
+                  multiline
+                  rows={8}
+                  error={!!errors.content}
+                  helperText={errors.content}
+                  placeholder="Write your article content here..."
+                />
+              </Grid>
+
+              {/* Tags */}
+              <Grid item xs={12}>
+                <Typography variant="h6" className="section-title">
+                  Tags
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={8}>
+                <TextField
+                  fullWidth
+                  label="Add Tag"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleTagAdd();
+                    }
+                  }}
+                  placeholder="Type a tag and press Enter"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <Button
+                  variant="outlined"
+                  onClick={handleTagAdd}
+                  disabled={!tagInput.trim()}
+                  fullWidth
+                >
+                  Add Tag
+                </Button>
+              </Grid>
+
+              {formData.tags.length > 0 && (
+                <Grid item xs={12}>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    {formData.tags.map((tag, index) => (
+                      <Chip
+                        key={index}
+                        label={tag}
+                        onDelete={() => handleTagRemove(tag)}
+                        color="primary"
+                        variant="outlined"
+                      />
+                    ))}
+                  </Box>
+                </Grid>
+              )}
 
               {/* Image Upload */}
               <Grid item xs={12}>
                 <Typography variant="h6" className="section-title">
-                  Product Images
+                  Article Images
                 </Typography>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <Button
                   variant="outlined"
                   component="label"
                   startIcon={<UploadIcon />}
                   className="upload-button"
                 >
-                  Upload Images
+                  Upload Cover Image
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleCoverImageChange}
+                  />
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  startIcon={<UploadIcon />}
+                  className="upload-button"
+                >
+                  Upload Additional Images
                   <input
                     type="file"
                     hidden
@@ -353,7 +468,7 @@ const CreateProduct = () => {
                   disabled={loading}
                   className="submit-button"
                 >
-                  {loading ? "Creating..." : "Create Product"}
+                  {loading ? "Creating..." : "Create Article"}
                 </Button>
               </Grid>
             </Grid>
@@ -364,4 +479,4 @@ const CreateProduct = () => {
   );
 };
 
-export default CreateProduct;
+export default CreateArticle;

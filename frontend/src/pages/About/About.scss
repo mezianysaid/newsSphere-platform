@@ -14,48 +14,7 @@
     min-height: 30vh;
     display: flex;
     align-items: center;
-    // margin-top: -15px;
-
-    .hero-video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      // width: auto;
-      // height: auto;
-      transform: translateX(-50%) translateY(-50%);
-      object-fit: cover;
-      z-index: 0;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        135deg,
-        rgba($primary-color, 0.5) 0%,
-        rgba($accent-color, 0.6) 100%
-      );
-      z-index: 1;
-      animation: overlayFade 1.5s ease-out;
-      // height: 20vh;
-      &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        opacity: 0.1;
-        animation: backgroundMove 20s linear infinite;
-        height: 20vh;
-      }
-    }
+    // background handled inline for consistency with other pages
 
     .hero-content {
       position: relative;
@@ -92,7 +51,7 @@
   // Company Info Section
   .company-info-section {
     padding: $spacing-xl * 2 2;
-    background-color: white;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
     padding-inline: 10px;
 
     .company-info-content {
@@ -100,20 +59,20 @@
       padding-inline: 10px;
 
       .section-title {
-        color: $text-color;
+        @include gradient-text($primary-gradient);
         margin-bottom: $spacing-lg;
         font-weight: 700;
       }
 
       .section-text {
         color: $text-light;
-        margin-bottom: $spacing-xl;
+        margin-bottom: $spacing-lg;
         line-height: 1.8;
       }
 
       .stats-container {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
         gap: $spacing-lg;
         margin-top: $spacing-xl;
 
@@ -124,18 +83,19 @@
 
         .stat-item {
           text-align: center;
-          padding: $spacing-md;
-          background-color: $gray-100;
+          padding: $spacing-lg;
+          background: rgba(102, 126, 234, 0.06);
+          border: 1px solid rgba(102, 126, 234, 0.15);
           border-radius: $border-radius-lg;
-          transition: transform 0.3s ease;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
 
           &:hover {
             transform: translateY(-5px);
           }
 
           h3 {
-            color: $primary-color;
-            font-weight: 700;
+            color: #ee5a24;
+            font-weight: 800;
             margin-bottom: $spacing-xs;
           }
 
@@ -154,10 +114,11 @@
         height: auto;
         border-radius: $border-radius-lg;
         box-shadow: $shadow-lg;
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
 
         &:hover {
           transform: scale(1.02);
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
       }
     }
@@ -166,21 +127,25 @@
   // Values Section
   .values-section {
     padding: $spacing-xl * 2 0;
-    background-color: $gray-100;
+    background: linear-gradient(135deg, #f7f8ff 0%, #f2f6ff 100%);
 
     .section-title {
       text-align: center;
       margin-bottom: $spacing-xl * 2;
-      color: $text-color;
+      @include gradient-text($primary-gradient);
       font-weight: 700;
       animation: fadeInUp 1s ease-out;
     }
 
     .value-card {
       height: 100%;
-      background-color: white;
+      background: rgba(255, 255, 255, 0.8);
       border-radius: $border-radius-lg;
-      transition: all 0.3s ease;
+      border: 1px solid rgba(102, 126, 234, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(6px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease,
+        border-color 0.3s ease;
       animation: fadeInUp 0.5s ease-out;
       animation-fill-mode: both;
 
@@ -191,35 +156,43 @@
       }
 
       &:hover {
-        transform: translateY(-10px);
-        box-shadow: $shadow-lg;
+        transform: translateY(-8px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+        border-color: rgba(102, 126, 234, 0.35);
       }
 
       .value-icon {
-        width: 60px;
-        height: 60px;
-        background-color: rgba($primary-color, 0.1);
-        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.15),
+          rgba(118, 75, 162, 0.15)
+        );
+        border: 1px solid rgba(102, 126, 234, 0.25);
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: $spacing-md;
 
         svg {
-          font-size: 2rem;
-          color: $primary-color;
+          font-size: 1.75rem;
+          color: #ee5a24;
+          filter: drop-shadow(0 2px 6px rgba(102, 126, 234, 0.35));
         }
       }
 
       .value-title {
         color: $text-color;
         margin-bottom: $spacing-sm;
-        font-weight: 600;
+        font-weight: 700;
+        letter-spacing: 0.2px;
       }
 
       .value-description {
         color: $text-light;
-        line-height: 1.6;
+        line-height: 1.7;
       }
     }
   }
@@ -233,7 +206,7 @@
     .section-title {
       text-align: center;
       margin-bottom: $spacing-xl * 2;
-      color: $text-color;
+      @include gradient-text($primary-gradient);
       font-weight: 700;
       animation: fadeInUp 1s ease-out;
     }

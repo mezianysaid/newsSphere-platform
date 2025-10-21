@@ -27,3 +27,12 @@
   min-height: calc(100vh - 200px); // Adjust based on your header/footer height
   padding: $spacing-lg 0;
 }
+
+// Utilities
+.text-primary-gradient {
+  @include gradient-text($primary-gradient);
+}
+
+.bg-primary-gradient {
+  @include gradient-bg($primary-gradient-soft);
+}

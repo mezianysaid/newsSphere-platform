@@ -22,13 +22,15 @@ import {
 import {
   Menu as MenuIcon,
   Person as PersonIcon,
-  Favorite as FavoriteIcon,
+  BookmarkBorder as BookmarkIcon,
   Home as HomeIcon,
   Category as CategoryIcon,
-  ShoppingBag as ProductsIcon,
+  Article as ArticleIcon,
   ExitToApp as LogoutIcon,
   Info as InfoIcon,
   ContactMail as ContactMailIcon,
+  TrendingUp as TrendingIcon,
+  Search as SearchIcon,
 } from "@mui/icons-material";
 
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
@@ -76,7 +78,7 @@ const Header = () => {
     }
   };
 
-  const handleFavoriteClick = () => {
+  const handleBookmarkClick = () => {
     navigate("/favorite");
   };
 
@@ -87,10 +89,11 @@ const Header = () => {
 
   const menuItems = [
     { label: "Home", path: "/", icon: <HomeIcon /> },
-    { label: "Products", path: "/products", icon: <ProductsIcon /> },
+    { label: "Latest News", path: "/news", icon: <ArticleIcon /> },
     { label: "Categories", path: "/categories", icon: <CategoryIcon /> },
-    { label: "About Us", path: "/about", icon: <InfoIcon /> },
-    { label: "Contact Us", path: "/contact", icon: <ContactMailIcon /> },
+    { label: "Trending", path: "/trending", icon: <TrendingIcon /> },
+    { label: "About", path: "/about", icon: <InfoIcon /> },
+    { label: "Contact", path: "/contact", icon: <ContactMailIcon /> },
   ];
 
   const isActive = (path) => {
@@ -101,7 +104,7 @@ const Header = () => {
     <Box className="mobile-drawer">
       <Box className="drawer-header">
         <Typography variant="h6" className="drawer-title">
-          ZonShop
+          NewsSphere
         </Typography>
       </Box>
       <Divider />
@@ -171,6 +174,7 @@ const Header = () => {
       <AppBar
         position="sticky"
         className="app-bar"
+        color="transparent"
         sx={{
           width: "100%",
           maxWidth: "100vw",
@@ -200,7 +204,7 @@ const Header = () => {
               marginRight: { xs: 1, sm: 2 },
             }}
           >
-            ZonShop
+            NewsSphere
           </Typography>
 
           {/* Mobile Menu Button */}
@@ -261,8 +265,8 @@ const Header = () => {
             <IconButton
               size="large"
               color="inherit"
-              onClick={handleFavoriteClick}
-              className="favorite-button"
+              onClick={handleBookmarkClick}
+              className="bookmark-button"
               sx={{
                 // padding: "8px",
                 display: "flex",
@@ -271,7 +275,7 @@ const Header = () => {
               }}
             >
               <Badge badgeContent={favoriteCount} color="error">
-                <FavoriteIcon />
+                <BookmarkIcon />
               </Badge>
             </IconButton>
 

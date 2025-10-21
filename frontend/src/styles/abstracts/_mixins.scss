@@ -56,3 +56,16 @@
     opacity: 0.9;
   }
 }
+
+// Gradient text
+@mixin gradient-text($gradient: $primary-gradient) {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Gradient background utility
+@mixin gradient-bg($gradient: $primary-gradient-soft) {
+  background: $gradient;
+}

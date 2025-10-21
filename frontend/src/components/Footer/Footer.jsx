@@ -20,16 +20,21 @@ import "./Footer.scss";
 
 const Footer = () => {
   const footerLinks = {
-    support: [
+    sections: [
+      { name: "Latest News", href: "/news" },
+      { name: "Trending", href: "/news" },
+      { name: "Politics", href: "/news" },
+      { name: "Business", href: "/news" },
+      { name: "Technology", href: "/news" },
+      { name: "Sports", href: "/news" },
+    ],
+    resources: [
       { name: "About Us", href: "/about" },
       { name: "Contact Us", href: "/contact" },
-      { name: "Shipping Policy", href: "#" },
-      { name: "Returns & Exchanges", href: "#" },
-    ],
-    legal: [
-      { name: "Products", href: "/products" },
-      { name: "Categories", href: "/categories" },
-      { name: "Favorites", href: "/favorite" },
+      { name: "Advertise", href: "#" },
+      { name: "Careers", href: "#" },
+      { name: "Privacy Policy", href: "#" },
+      { name: "Terms of Service", href: "#" },
     ],
   };
 
@@ -52,15 +57,16 @@ const Footer = () => {
     <Box component="footer" className="footer">
       <Container maxWidth="lg">
         <Grid container spacing={4}>
-          {/* Company Info */}
+          {/* Brand / About */}
           <Grid item xs={12} md={4}>
             <Typography variant="h6" className="footer-title">
-              About Our Store
+              About NewsSphere
             </Typography>
             <Typography variant="body2" className="footer-description">
-              We are your one-stop destination for all your shopping needs.
-              Offering high-quality products at competitive prices with
-              excellent customer service.
+              NewsSphere brings you breaking news, in-depth analysis, and expert
+              insights from around the world. Stay informed with trusted
+              journalism and real-time updates across politics, business,
+              technology, sports, and more.
             </Typography>
             <Box className="social-links">
               {socialLinks.map((social, index) => (
@@ -80,10 +86,10 @@ const Footer = () => {
 
           <Grid item xs={12} sm={6} md={2}>
             <Typography variant="h6" className="footer-title">
-              Support
+              Sections
             </Typography>
             <Box component="ul" className="footer-links">
-              {footerLinks.support.map((link, index) => (
+              {footerLinks.sections.map((link, index) => (
                 <li key={index}>
                   <Link href={link.href} className="footer-link">
                     {link.name}
@@ -95,10 +101,10 @@ const Footer = () => {
 
           <Grid item xs={12} sm={6} md={2}>
             <Typography variant="h6" className="footer-title">
-              Navigation
+              Resources
             </Typography>
             <Box component="ul" className="footer-links">
-              {footerLinks.legal.map((link, index) => (
+              {footerLinks.resources.map((link, index) => (
                 <li key={index}>
                   <Link href={link.href} className="footer-link">
                     {link.name}
@@ -115,19 +121,8 @@ const Footer = () => {
             </Typography>
             <Box className="contact-info">
               <Box className="contact-item">
-                <Phone className="contact-icon" />
-                <Typography variant="body2">+212701171398</Typography>
-              </Box>
-              <Box className="contact-item">
                 <Email className="contact-icon" />
-                <Typography variant="body2">zonshopstor@gmail.com</Typography>
-              </Box>
-
-              <Box className="contact-item">
-                <AccessTime className="contact-icon" />
-                <Typography variant="body2">
-                  Mon - Fri: 9:00 AM - 6:00 PM
-                </Typography>
+                <Typography variant="body2">news@newssphere.com</Typography>
               </Box>
             </Box>
           </Grid>
@@ -138,30 +133,12 @@ const Footer = () => {
         {/* Bottom Bar */}
         <Box className="footer-bottom">
           <Typography variant="body2" className="copyright">
-            © {new Date().getFullYear()} ZonShop. All rights reserved.
+            © {new Date().getFullYear()} NewsSphere. All rights reserved.
           </Typography>
           <Box className="payment-methods">
             <Typography variant="body2" className="payment-text">
-              We accept:
+              Independent journalism.
             </Typography>
-            <Box className="payment-icons">
-              <img
-                src="https://placehold.co/40x25/ffffff/000000?text=visa"
-                alt="Visa"
-              />
-              <img
-                src="https://placehold.co/40x25/ffffff/000000?text=mastercard"
-                alt="Mastercard"
-              />
-              <img
-                src="https://placehold.co/40x25/ffffff/000000?text=paypal"
-                alt="PayPal"
-              />
-              <img
-                src="https://placehold.co/40x25/ffffff/000000?text=amex"
-                alt="American Express"
-              />
-            </Box>
           </Box>
         </Box>
       </Container>

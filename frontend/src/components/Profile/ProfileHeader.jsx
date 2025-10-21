@@ -29,6 +29,8 @@ import {
   Person,
   Edit as EditIcon,
   Add as AddIcon,
+  Article as ArticleIcon,
+  Newspaper as NewsIcon,
 } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { updateUserProfile } from "../../store/actions/userActions";
@@ -114,7 +116,7 @@ const ProfileHeader = ({ user }) => {
       <Box className="profile-header" sx={{ textAlign: "center", mb: 4 }}>
         <Box sx={{ position: "relative", display: "inline-block" }}>
           <Avatar
-            src={userlogo }
+            src={userlogo}
             alt={user.name}
             onError={handleImageError}
             sx={{
@@ -161,13 +163,14 @@ const ProfileHeader = ({ user }) => {
           </Button> */}
           {user.role === "admin" && (
             <>
-              <Tooltip title="Add product">
+              <Tooltip title="Create article">
                 <Button
                   variant="contained"
                   onClick={() => navigate("/admin/addProduct")}
-                  startIcon={<AddIcon />}
+                  startIcon={<ArticleIcon />}
+                  color="secondary"
                 >
-                  Add Product
+                  Create Article
                 </Button>
               </Tooltip>
 
@@ -177,7 +180,15 @@ const ProfileHeader = ({ user }) => {
                 className="manageButton"
                 startIcon={<EditIcon />}
               >
-                Manage Products
+                Manage Articles
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={() => navigate("/news")}
+                startIcon={<NewsIcon />}
+              >
+                View Articles
               </Button>
             </>
           )}
